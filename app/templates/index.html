@@ -3,49 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Mini Store</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <header>
-        <h1>Mini Store</h1>
-        <nav>
-            <a href="/">Home</a>
-            <a href="#">Products</a>
-            <a href="#">Cart 🛒</a>
-        </nav>
-    </header>
+<header class="navbar">
 
-    <main>
-        <section class="hero">
-            <h2>Welcome to Mini Store</h2>
-            <p>Discover our latest products.</p>
-        </section>
+    <div class="logo">
+        Mini Store
+    </div>
 
-        <section class="products">
+    <nav>
+        <a href="/">Home</a>
+        <a href="#products">Products</a>
+        <a href="#">Cart 🛒</a>
+    </nav>
 
-            <div class="product-card">
-                <h3>Wireless Headphones</h3>
-                <p>$49.99</p>
-                <button>Add to Cart</button>
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <p class="hero-label">WELCOME TO MINI STORE</p>
+
+        <h1>
+            Everything you need,
+            <span>in one place.</span>
+        </h1>
+
+        <p>
+            Discover quality products at simple prices.
+        </p>
+
+        <a href="#products" class="hero-button">
+            Shop Now
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="products-section" id="products">
+
+    <div class="section-header">
+
+        <div>
+            <p class="section-label">OUR COLLECTION</p>
+
+            <h2>Featured Products</h2>
+        </div>
+
+        <p>
+            Explore our latest products.
+        </p>
+
+    </div>
+
+
+    <div class="products-grid">
+
+        {% for product in products %}
+
+        <article class="product-card">
+
+            <div class="product-image">
+
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+
             </div>
 
-            <div class="product-card">
-                <h3>Mechanical Keyboard</h3>
-                <p>$79.99</p>
-                <button>Add to Cart</button>
+
+            <div class="product-info">
+
+                <p class="category">
+                    {{ product.category }}
+                </p>
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+                <p class="rating">
+                    ★ {{ product.rating }}
+                </p>
+
+                <p class="description">
+                    {{ product.description }}
+                </p>
+
+
+                <div class="product-bottom">
+
+                    <span class="price">
+                        ${{ "%.2f"|format(product.price) }}
+                    </span>
+
+                    <a
+                        href="{{ url_for('main.product_detail', product_id=product.id) }}"
+                        class="details-button"
+                    >
+                        View Details
+                    </a>
+
+                </div>
+
             </div>
 
-            <div class="product-card">
-                <h3>Wireless Mouse</h3>
-                <p>$29.99</p>
-                <button>Add to Cart</button>
-            </div>
+        </article>
 
-        </section>
-    </main>
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 Mini Store. All rights reserved.</p>
+
+</footer>
 
 </body>
 </html>
