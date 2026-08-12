@@ -2,25 +2,21 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ product.name }} | Mini Store</title>
+    <title>{{ product.name }} | MiniStore</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
-
 
 <body>
 
     <header class="navbar">
 
-        <div class="logo">
-            Mini Store
-        </div>
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
 
         <nav>
 
@@ -32,9 +28,27 @@
                 Products
             </a>
 
-            <a href="#">
-                Cart 🛒
+            <a href="{{ url_for('main.cart') }}" class="cart-link">
+                <span class="cart-icon">&#128722;</span>
+                Cart
+                <span class="cart-badge">
+                    {{ session.get("cart", {}).values() | sum }}
+                </span>
             </a>
+
+            {% if session.get("user_id") %}
+            <a href="{{ url_for('main.account') }}">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-link">
+                Logout
+            </a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}">
+                Login
+            </a>
+            {% endif %}
 
         </nav>
 
@@ -43,9 +57,17 @@
 
     <main class="product-details">
 
-        <div class="detail-image">
+        <div>
 
-            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+            <a href="{{ url_for('main.home') }}#products" class="back-link">
+                &larr; Back to products
+            </a>
+
+            <div class="detail-image">
+
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+
+            </div>
 
         </div>
 
@@ -60,8 +82,8 @@
                 {{ product.name }}
             </h1>
 
-            <p class="rating">
-                ★ {{ product.rating }}
+            <p class="detail-rating">
+                &#9733; {{ product.rating }} / 5
             </p>
 
             <p class="detail-price">
@@ -72,13 +94,38 @@
                 {{ product.description }}
             </p>
 
-            <a href="{{ url_for('main.add_to_cart', product_id=product['id']) }}" class="add-cart-button">
+
+            {% if product.stock > 0 %}
+
+            <p class="stock-status stock-available">
+                &#10003; In stock — {{ product.stock }} available
+            </p>
+
+            <a href="{{ url_for('main.add_to_cart', product_id=product.id) }}" class="btn btn-accent">
                 Add to Cart
             </a>
+
+            {% else %}
+
+            <p class="stock-status stock-unavailable">
+                Currently out of stock
+            </p>
+
+            {% endif %}
 
         </div>
 
     </main>
+
+
+    <footer>
+
+        <p>
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
+        </p>
+
+    </footer>
 
 </body>
 

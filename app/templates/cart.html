@@ -2,25 +2,21 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Shopping Cart</title>
+    <title>Your Cart | MiniStore</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 
 <body>
 
     <header class="navbar">
 
-        <div class="logo">
-            Mini Store
-        </div>
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
 
         <nav>
 
@@ -32,9 +28,29 @@
                 Products
             </a>
 
-            <a href="{{ url_for('main.cart') }}">
-                Cart 🛒 ({{ cart_count }})
+            <a href="{{ url_for('main.cart') }}" class="cart-link active">
+                <span class="cart-icon">&#128722;</span>
+                Cart
+                <span class="cart-badge">{{ cart_count }}</span>
             </a>
+
+            {% if session.get("user_id") %}
+
+            <a href="{{ url_for('main.account') }}">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-link">
+                Logout
+            </a>
+
+            {% else %}
+
+            <a href="{{ url_for('main.login') }}">
+                Login
+            </a>
+
+            {% endif %}
 
         </nav>
 
@@ -43,117 +59,145 @@
 
     <main class="cart-page">
 
-        <h1>Your Shopping Cart</h1>
+        <div class="page-heading">
+
+            <p class="section-label">
+                SHOPPING BAG
+            </p>
+
+            <h1>
+                Your Cart
+            </h1>
+
+        </div>
 
 
         {% if cart_items %}
 
-            <div class="cart-items">
+        <div class="cart-items">
 
-                {% for item in cart_items %}
+            {% for item in cart_items %}
 
-                    <div class="cart-item">
+            <article class="cart-item">
 
-                        <img
-                            src="{{ url_for('static', filename='images/' + item.product['image']) }}"
-                            alt="{{ item.product['name'] }}"
-                        >
+                <img src="{{ url_for('static', filename='images/' + item.product.image) }}"
+                    alt="{{ item.product.name }}">
 
 
-                        <div class="cart-item-info">
+                <div class="cart-item-info">
 
-                            <h2>
-                                {{ item.product['name'] }}
-                            </h2>
+                    <p class="category">
+                        {{ item.product.category }}
+                    </p>
 
-                            <p>
-                                Price:
-                                ${{ "%.2f"|format(item.product['price']) }}
-                            </p>
+                    <h2>
+                        {{ item.product.name }}
+                    </h2>
 
-
-                            <div class="quantity-controls">
-
-                                <span>Quantity:</span>
-
-                                <a
-                                    href="{{ url_for('main.decrease_quantity', product_id=item.product['id']) }}"
-                                    class="quantity-button"
-                                >
-                                    −
-                                </a>
-
-                                <span class="quantity">
-                                    {{ item.quantity }}
-                                </span>
-
-                                <a
-                                    href="{{ url_for('main.increase_quantity', product_id=item.product['id']) }}"
-                                    class="quantity-button"
-                                >
-                                    +
-                                </a>
-
-                            </div>
+                    <p>
+                        ${{ "%.2f"|format(item.product.price) }}
+                    </p>
 
 
-                            <p>
-                                Stock available:
-                                {{ item.product['stock'] }}
-                            </p>
+                    <div class="quantity-controls">
 
+                        <a href="{{ url_for('main.decrease_quantity', product_id=item.product.id) }}"
+                            class="quantity-button">
+                            &minus;
+                        </a>
 
-                            <p class="subtotal">
+                        <span class="quantity">
+                            {{ item.quantity }}
+                        </span>
 
-                                Subtotal:
-                                ${{ "%.2f"|format(item.subtotal) }}
-
-                            </p>
-
-
-                            <a
-                                href="{{ url_for('main.remove_from_cart', product_id=item.product['id']) }}"
-                                class="remove-button"
-                            >
-                                Remove
-                            </a>
-
-                        </div>
+                        <a href="{{ url_for('main.increase_quantity', product_id=item.product.id) }}"
+                            class="quantity-button">
+                            +
+                        </a>
 
                     </div>
 
-                {% endfor %}
+
+                    <p class="subtotal">
+                        Subtotal:
+                        ${{ "%.2f"|format(item.subtotal) }}
+                    </p>
+
+
+                    <a href="{{ url_for('main.remove_from_cart', product_id=item.product.id) }}" class="remove-button">
+                        Remove item
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="cart-summary">
+
+            <div>
+
+                <span class="cart-total-label">
+                    Total
+                </span>
+
+                <span class="cart-total">
+                    ${{ "%.2f"|format(total) }}
+                </span>
 
             </div>
 
 
-            <div class="cart-summary">
+            <div class="cart-actions">
 
-                <h2>
-                    Total:
-                    ${{ "%.2f"|format(total) }}
-                </h2>
+                <a href="{{ url_for('main.home') }}#products" class="btn btn-outline">
+                    Continue Shopping
+                </a>
 
-                <a href="#" class="checkout-button">
+                {% if session.get("user_id") %}
+
+                <a href="{{ url_for('main.checkout') }}" class="btn btn-accent">
                     Proceed to Checkout
                 </a>
 
+                {% else %}
+
+                <a href="{{ url_for('main.login') }}" class="btn btn-accent">
+                    Login to Checkout
+                </a>
+
+                {% endif %}
+
             </div>
+
+        </div>
 
 
         {% else %}
 
-            <div class="empty-cart">
+        <div class="empty-cart">
 
-                <p>
-                    Your cart is empty.
-                </p>
-
-                <a href="{{ url_for('main.home') }}">
-                    Continue Shopping
-                </a>
-
+            <div class="empty-cart-icon">
+                &#128722;
             </div>
+
+            <h2>
+                Your cart is empty
+            </h2>
+
+            <p>
+                Looks like you haven't added anything yet.
+            </p>
+
+            <a href="{{ url_for('main.home') }}#products" class="btn btn-primary">
+                Start Shopping
+            </a>
+
+        </div>
 
         {% endif %}
 
@@ -163,7 +207,8 @@
     <footer>
 
         <p>
-            © 2026 Mini Store. All rights reserved.
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
         </p>
 
     </footer>

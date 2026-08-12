@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Account | MiniStore</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
+
+        <nav>
+
+            <a href="{{ url_for('main.home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('main.home') }}#products">
+                Products
+            </a>
+
+            <a href="{{ url_for('main.cart') }}" class="cart-link">
+                <span class="cart-icon">&#128722;</span>
+                Cart
+                <span class="cart-badge">{{ cart_count }}</span>
+            </a>
+
+            <a href="{{ url_for('main.account') }}" class="active">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-button">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="account-page">
+
+
+        <section class="account-header">
+
+            <div>
+
+                <p class="section-label">
+                    MY ACCOUNT
+                </p>
+
+                <h1>
+                    Welcome, {{ user.name }}
+                </h1>
+
+                <p>
+                    {{ user.email }}
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('main.home') }}" class="btn btn-outline">
+                Continue Shopping
+            </a>
+
+        </section>
+
+
+        <section class="account-section">
+
+            <h2>
+                Your Orders
+            </h2>
+
+
+            {% if orders %}
+
+            <div class="orders-table-wrapper">
+
+                <table class="orders-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for order in orders %}
+
+                        <tr>
+
+                            <td>
+
+                                <a href="{{ url_for('main.order_confirmation', order_id=order.id) }}"
+                                    class="order-link">
+                                    #{{ order.id }}
+                                </a>
+
+                            </td>
+
+                            <td>
+                                {{ order.created_at }}
+                            </td>
+
+                            <td>
+                                ${{ "%.2f"|format(order.total) }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-cart">
+
+                <div class="empty-cart-icon">
+                    &#128230;
+                </div>
+
+                <h2>
+                    No orders yet
+                </h2>
+
+                <p>
+                    Your completed orders will appear here.
+                </p>
+
+                <a href="{{ url_for('main.home') }}#products" class="btn btn-primary">
+                    Start Shopping
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

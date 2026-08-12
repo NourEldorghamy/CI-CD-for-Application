@@ -1,16 +1,18 @@
 from flask import Flask
 
+from app.database import close_db
 
-def create_app():
+
+def create_app(test_config=None):
 
     app = Flask(__name__)
 
     app.config.from_mapping(
-        DATABASE=app.instance_path + "/store.db",
-        SECRET_KEY="dev-secret-key"
+        SECRET_KEY="dev"
     )
 
-    from app.database import close_db
+    if test_config is not None:
+        app.config.update(test_config)
 
     app.teardown_appcontext(close_db)
 
