@@ -5,85 +5,80 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ product.name }} | Mini Store</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 
 <body>
 
-<header class="navbar">
+    <header class="navbar">
 
-    <div class="logo">
-        Mini Store
-    </div>
+        <div class="logo">
+            Mini Store
+        </div>
 
-    <nav>
+        <nav>
 
-        <a href="{{ url_for('main.home') }}">
-            Home
-        </a>
+            <a href="{{ url_for('main.home') }}">
+                Home
+            </a>
 
-        <a href="{{ url_for('main.home') }}#products">
-            Products
-        </a>
+            <a href="{{ url_for('main.home') }}#products">
+                Products
+            </a>
 
-        <a href="#">
-            Cart 🛒
-        </a>
+            <a href="#">
+                Cart 🛒
+            </a>
 
-    </nav>
+        </nav>
 
-</header>
-
-
-<main class="product-details">
-
-    <div class="detail-image">
-
-        <img
-            src="{{ url_for('static', filename='images/' + product.image) }}"
-            alt="{{ product.name }}"
-        >
-
-    </div>
+    </header>
 
 
-    <div class="detail-info">
+    <main class="product-details">
 
-        <p class="category">
-            {{ product.category }}
-        </p>
+        <div class="detail-image">
 
-        <h1>
-            {{ product.name }}
-        </h1>
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
 
-        <p class="rating">
-            ★ {{ product.rating }}
-        </p>
+        </div>
 
-        <p class="detail-price">
-            ${{ "%.2f"|format(product.price) }}
-        </p>
 
-        <p class="detail-description">
-            {{ product.description }}
-        </p>
+        <div class="detail-info">
 
-        <button class="add-cart-button">
-            Add to Cart
-        </button>
+            <p class="category">
+                {{ product.category }}
+            </p>
 
-    </div>
+            <h1>
+                {{ product.name }}
+            </h1>
 
-</main>
+            <p class="rating">
+                ★ {{ product.rating }}
+            </p>
+
+            <p class="detail-price">
+                ${{ "%.2f"|format(product.price) }}
+            </p>
+
+            <p class="detail-description">
+                {{ product.description }}
+            </p>
+
+            <a href="{{ url_for('main.add_to_cart', product_id=product['id']) }}" class="add-cart-button">
+                Add to Cart
+            </a>
+
+        </div>
+
+    </main>
 
 </body>
 

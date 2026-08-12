@@ -1,139 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Mini Store</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-<header class="navbar">
+    <header class="navbar">
 
-    <div class="logo">
-        Mini Store
-    </div>
-
-    <nav>
-        <a href="/">Home</a>
-        <a href="#products">Products</a>
-        <a href="#">Cart 🛒</a>
-    </nav>
-
-</header>
-
-
-<section class="hero">
-
-    <div class="hero-content">
-
-        <p class="hero-label">WELCOME TO MINI STORE</p>
-
-        <h1>
-            Everything you need,
-            <span>in one place.</span>
-        </h1>
-
-        <p>
-            Discover quality products at simple prices.
-        </p>
-
-        <a href="#products" class="hero-button">
-            Shop Now
-        </a>
-
-    </div>
-
-</section>
-
-
-<section class="products-section" id="products">
-
-    <div class="section-header">
-
-        <div>
-            <p class="section-label">OUR COLLECTION</p>
-
-            <h2>Featured Products</h2>
+        <div class="logo">
+            Mini Store
         </div>
 
-        <p>
-            Explore our latest products.
-        </p>
+        <nav>
+            <a href="/">Home</a>
+            <a href="#products">Products</a>
+            <a href="{{ url_for('main.cart') }}"> Cart 🛒 ({{ cart_count }})</a>
+        </nav>
 
-    </div>
+    </header>
 
 
-    <div class="products-grid">
+    <section class="hero">
 
-        {% for product in products %}
+        <div class="hero-content">
 
-        <article class="product-card">
+            <p class="hero-label">WELCOME TO MINI STORE</p>
 
-            <div class="product-image">
+            <h1>
+                Everything you need,
+                <span>in one place.</span>
+            </h1>
 
-                <img
-                    src="{{ url_for('static', filename='images/' + product.image) }}"
-                    alt="{{ product.name }}"
-                >
+            <p>
+                Discover quality products at simple prices.
+            </p>
 
+            <a href="#products" class="hero-button">
+                Shop Now
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section class="products-section" id="products">
+
+        <div class="section-header">
+
+            <div>
+                <p class="section-label">OUR COLLECTION</p>
+
+                <h2>Featured Products</h2>
             </div>
 
+            <p>
+                Explore our latest products.
+            </p>
 
-            <div class="product-info">
-
-                <p class="category">
-                    {{ product.category }}
-                </p>
-
-                <h3>
-                    {{ product.name }}
-                </h3>
-
-                <p class="rating">
-                    ★ {{ product.rating }}
-                </p>
-
-                <p class="description">
-                    {{ product.description }}
-                </p>
+        </div>
 
 
-                <div class="product-bottom">
+        <div class="products-grid">
 
-                    <span class="price">
-                        ${{ "%.2f"|format(product.price) }}
-                    </span>
+            {% for product in products %}
 
-                    <a
-                        href="{{ url_for('main.product_detail', product_id=product.id) }}"
-                        class="details-button"
-                    >
-                        View Details
-                    </a>
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
 
                 </div>
 
-            </div>
 
-        </article>
+                <div class="product-info">
 
-        {% endfor %}
+                    <p class="category">
+                        {{ product.category }}
+                    </p>
 
-    </div>
+                    <h3>
+                        {{ product.name }}
+                    </h3>
 
-</section>
+                    <p class="rating">
+                        ★ {{ product.rating }}
+                    </p>
+
+                    <p class="description">
+                        {{ product.description }}
+                    </p>
 
 
-<footer>
+                    <div class="product-bottom">
 
-    <p>© 2026 Mini Store. All rights reserved.</p>
+                        <span class="price">
+                            ${{ "%.2f"|format(product.price) }}
+                        </span>
 
-</footer>
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="details-button">
+                            View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <p>© 2026 Mini Store. All rights reserved.</p>
+
+    </footer>
 
 </body>
+
 </html>
