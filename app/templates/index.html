@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Mini Store</title>
+    <title>MiniStore | Home</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -14,24 +14,58 @@
 
     <header class="navbar">
 
-        <div class="logo">
-            Mini Store
-        </div>
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
 
         <nav>
-            <a href="/">Home</a>
-            <a href="#products">Products</a>
-            <a href="{{ url_for('main.cart') }}"> Cart 🛒 ({{ cart_count }})</a>
+
+            <a href="{{ url_for('main.home') }}" class="active">
+                Home
+            </a>
+
+            <a href="#products">
+                Products
+            </a>
+
+            <a href="{{ url_for('main.cart') }}" class="cart-link">
+                <span class="cart-icon">&#128722;</span>
+                Cart
+                <span class="cart-badge">{{ cart_count }}</span>
+            </a>
+
+            {% if session.get("user_id") %}
+
+            <a href="{{ url_for('main.account') }}" class="account-link">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-link">
+                Logout
+            </a>
+
+            {% else %}
+
+            <a href="{{ url_for('main.login') }}">
+                Login
+            </a>
+
+            {% endif %}
+
         </nav>
 
     </header>
 
 
+    <!-- HERO -->
+
     <section class="hero">
 
         <div class="hero-content">
 
-            <p class="hero-label">WELCOME TO MINI STORE</p>
+            <p class="hero-label">
+                WELCOME TO MINISTORE
+            </p>
 
             <h1>
                 Everything you need,
@@ -39,26 +73,64 @@
             </h1>
 
             <p>
-                Discover quality products at simple prices.
+                Discover quality products, simple prices,
+                and everything you need for your everyday life.
             </p>
 
-            <a href="#products" class="hero-button">
-                Shop Now
-            </a>
+            <div class="hero-actions">
+
+                <a href="#products" class="btn btn-primary">
+                    Shop Now
+                </a>
+
+                <a href="#products" class="btn btn-outline">
+                    Explore Collection
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-feature">
+
+            <div class="hero-feature-icon">
+                &#9733;
+            </div>
+
+            <div>
+
+                <strong>
+                    Quality Products
+                </strong>
+
+                <span>
+                    Simple prices. Easy shopping.
+                </span>
+
+            </div>
 
         </div>
 
     </section>
 
 
+    <!-- PRODUCTS -->
+
     <section class="products-section" id="products">
 
         <div class="section-header">
 
             <div>
-                <p class="section-label">OUR COLLECTION</p>
 
-                <h2>Featured Products</h2>
+                <p class="section-label">
+                    OUR COLLECTION
+                </p>
+
+                <h2>
+                    Featured Products
+                </h2>
+
             </div>
 
             <p>
@@ -92,7 +164,7 @@
                     </h3>
 
                     <p class="rating">
-                        ★ {{ product.rating }}
+                        &#9733; {{ product.rating }}
                     </p>
 
                     <p class="description">
@@ -125,7 +197,10 @@
 
     <footer>
 
-        <p>© 2026 Mini Store. All rights reserved.</p>
+        <p>
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
+        </p>
 
     </footer>
 

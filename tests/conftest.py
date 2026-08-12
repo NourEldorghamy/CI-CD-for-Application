@@ -1,27 +1,30 @@
+import sys
 import sqlite3
-
 from pathlib import Path
 
+import pytest
 
-DATABASE = Path(__file__).resolve().parent.parent / "instance" / "store.db"
+
+# Add the project root to Python's import path.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
-def init_db():
+from app import create_app
 
-    DATABASE.parent.mkdir(exist_ok=True)
 
-    connection = sqlite3.connect(DATABASE)
+@pytest.fixture
+def app(tmp_path):
 
-    connection.execute("PRAGMA foreign_keys = ON")
+    # Create a temporary database for testing.
+    database = tmp_path / "test.db"
 
-    cursor = connection.cursor()
+    connection = sqlite3.connect(database)
 
-    # ========================================================
-    # PRODUCTS
-    # ========================================================
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS products (
+    connection.execute("""
+        CREATE TABLE products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             description TEXT NOT NULL,
@@ -33,12 +36,8 @@ def init_db():
         )
     """)
 
-    # ========================================================
-    # USERS
-    # ========================================================
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
+    connection.execute("""
+        CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
@@ -47,12 +46,8 @@ def init_db():
         )
     """)
 
-    # ========================================================
-    # ORDERS
-    # ========================================================
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS orders (
+    connection.execute("""
+        CREATE TABLE orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             customer_name TEXT NOT NULL,
@@ -66,12 +61,8 @@ def init_db():
         )
     """)
 
-    # ========================================================
-    # ORDER ITEMS
-    # ========================================================
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS order_items (
+    connection.execute("""
+        CREATE TABLE order_items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             order_id INTEGER NOT NULL,
             product_id INTEGER NOT NULL,
@@ -87,13 +78,34 @@ def init_db():
         )
     """)
 
-    connection.commit()
+    # Add a test product.
+    connection.execute("""
+        INSERT INTO products
+        (name, description, price, category, rating, image, stock)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (
+        "Test Headphones",
+        "Test product for automated testing.",
+        50.00,
+        "Audio",
+        4.5,
+        "headphones.jpg",
+        10
+    ))
 
+    connection.commit()
     connection.close()
 
+    app = create_app({
+        "TESTING": True,
+        "SECRET_KEY": "test-secret-key",
+        "DATABASE": str(database)
+    })
 
-if __name__ == "__main__":
+    return app
 
-    init_db()
 
-    print("Database initialized successfully.")
+@pytest.fixture
+def client(app):
+
+    return app.test_client()

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmed | MiniStore</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
+
+        <nav>
+
+            <a href="{{ url_for('main.home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('main.home') }}#products">
+                Products
+            </a>
+
+            <a href="{{ url_for('main.cart') }}" class="cart-link">
+                <span class="cart-icon">&#128722;</span>
+                Cart
+                <span class="cart-badge">
+                    {{ session.get("cart", {}).values() | sum }}
+                </span>
+            </a>
+
+            <a href="{{ url_for('main.account') }}">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-link">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="confirmation-page">
+
+
+        <section class="confirmation-header">
+
+            <div class="success-icon">
+                &#10003;
+            </div>
+
+            <h1>
+                Order Confirmed!
+            </h1>
+
+            <p>
+                Thank you for your purchase, {{ order.customer_name }}.
+            </p>
+
+        </section>
+
+
+        <!-- ORDER INFORMATION -->
+
+        <section class="order-info-grid">
+
+            <div class="info-card">
+
+                <span>
+                    Order Number
+                </span>
+
+                <strong>
+                    #{{ order.id }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span>
+                    Customer
+                </span>
+
+                <strong>
+                    {{ order.customer_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    ${{ "%.2f"|format(order.total) }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDER ITEMS -->
+
+        <section class="confirmation-items">
+
+            <h2>
+                Order Details
+            </h2>
+
+
+            {% for item in order_items %}
+
+            <div class="order-item">
+
+                <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+
+
+                <div class="order-item-info">
+
+                    <strong>
+                        {{ item.name }}
+                    </strong>
+
+                    <span>
+                        Quantity: {{ item.quantity }}
+                    </span>
+
+                </div>
+
+
+                <div class="order-item-price">
+
+                    ${{ "%.2f"|format(item.price * item.quantity) }}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+            <div class="confirmation-total">
+
+                Total:
+                ${{ "%.2f"|format(order.total) }}
+
+            </div>
+
+        </section>
+
+
+        <div class="confirmation-actions">
+
+            <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+                Continue Shopping
+            </a>
+
+            <a href="{{ url_for('main.account') }}" class="btn btn-outline">
+                View My Orders
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

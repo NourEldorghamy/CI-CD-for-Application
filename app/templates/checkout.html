@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | MiniStore</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <a href="{{ url_for('main.home') }}" class="logo">
+            <span class="logo-main">Mini</span><span class="logo-accent">Store</span>
+        </a>
+
+        <nav>
+
+            <a href="{{ url_for('main.home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('main.home') }}#products">
+                Products
+            </a>
+
+            <a href="{{ url_for('main.cart') }}">
+                Cart
+            </a>
+
+            <a href="{{ url_for('main.account') }}">
+                Account
+            </a>
+
+            <a href="{{ url_for('main.logout') }}" class="logout-link">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="checkout-page">
+
+        <div class="page-heading">
+
+            <p class="section-label">
+                COMPLETE YOUR ORDER
+            </p>
+
+            <h1>
+                Checkout
+            </h1>
+
+        </div>
+
+
+        <div class="checkout-grid">
+
+
+            <!-- CUSTOMER INFORMATION -->
+
+            <div class="checkout-card">
+
+                <h2>
+                    Delivery Information
+                </h2>
+
+                <form method="POST">
+
+                    <div class="form-group">
+
+                        <label for="customer_name">
+                            Full Name
+                        </label>
+
+                        <input type="text" id="customer_name" name="customer_name" class="form-control"
+                            value="{{ session.get('user_name', '') }}" required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input type="email" id="email" name="email" class="form-control"
+                            value="{{ session.get('user_email', '') }}" required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="address">
+                            Delivery Address
+                        </label>
+
+                        <textarea id="address" name="address" class="form-control" rows="5"
+                            placeholder="Enter your full delivery address" required></textarea>
+
+                    </div>
+
+
+                    <button type="submit" class="checkout-submit">
+                        Place Order
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="checkout-card checkout-summary">
+
+                <h2>
+                    Order Summary
+                </h2>
+
+
+                {% for item in cart_items %}
+
+                <div class="checkout-item">
+
+                    <div>
+
+                        <div class="checkout-item-name">
+                            {{ item.product.name }}
+                        </div>
+
+                        <div class="checkout-item-details">
+                            Quantity: {{ item.quantity }}
+                        </div>
+
+                    </div>
+
+                    <div class="checkout-item-price">
+                        ${{ "%.2f"|format(item.subtotal) }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+                <div class="checkout-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        ${{ "%.2f"|format(total) }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            <strong>MiniStore</strong>
+            &copy; 2026. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>
