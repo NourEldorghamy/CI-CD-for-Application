@@ -52,11 +52,23 @@ def seed_database():
 
     cursor = connection.cursor()
 
-    cursor.executemany("""
-        INSERT INTO products
-        (name, description, price, category, rating, image, stock)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, products)
+    for product in products:
+
+        cursor.execute("""
+            SELECT id
+            FROM products
+            WHERE name = ?
+        """, (product[0],))
+
+        existing_product = cursor.fetchone()
+
+        if existing_product is None:
+
+            cursor.execute("""
+                INSERT INTO products
+                (name, description, price, category, rating, image, stock)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, product)
 
     connection.commit()
 
@@ -64,5 +76,7 @@ def seed_database():
 
 
 if __name__ == "__main__":
+
     seed_database()
-    print("Products inserted successfully.")
+
+    print("Database seeding completed successfully.")
